@@ -1,0 +1,62 @@
+$ python3 OneStepErrorProbability.py --zerodiag
+
+Computing probability for 12 stored patterns...
+  Prob: 0.00052
+  Time: 4.172587156295776 seconds
+Computing probability for 24 stored patterns...
+  Prob: 0.01140
+  Time: 5.4861860275268555 seconds
+Computing probability for 48 stored patterns...
+  Prob: 0.05458
+  Time: 7.858587741851807 seconds
+Computing probability for 70 stored patterns...
+  Prob: 0.09360
+  Time: 9.817108154296875 seconds
+Computing probability for 100 stored patterns...
+  Prob: 0.13691
+  Time: 12.687513828277588 seconds
+Computing probability for 120 stored patterns...
+  Prob: 0.15650
+  Time: 14.801092863082886 seconds
+
+p   | probability
+----|------------
+12  | 0.00052
+24  | 0.01140
+48  | 0.05458
+70  | 0.09360
+100 | 0.13691
+120 | 0.15650
+
+
+
+$ python3 OneStepErrorPropability.py
+
+Computing probability for 12 stored patterns...
+  Prob: 0.00012
+  Time: 4.316368103027344 seconds
+Computing probability for 24 stored patterns...
+  Prob: 0.00284
+  Time: 5.483811378479004 seconds
+Computing probability for 48 stored patterns...
+  Prob: 0.01238
+  Time: 7.717572927474976 seconds
+Computing probability for 70 stored patterns...
+  Prob: 0.01924
+  Time: 9.802137613296509 seconds
+Computing probability for 100 stored patterns...
+  Prob: 0.02217
+  Time: 12.803136348724365 seconds
+Computing probability for 120 stored patterns...
+  Prob: 0.02202
+  Time: 14.67278242111206 seconds
+
+p   | probability
+----|------------
+12  | 0.00012
+24  | 0.00284
+48  | 0.01238
+70  | 0.01924
+100 | 0.02217
+120 | 0.0220
+
