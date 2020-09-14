@@ -1,13 +1,13 @@
 $ python3 StochasticHopfieldNetwork.py 7
 
-100% (100 of 100) |###############################################| Elapsed Time: 0:02:39 Time:  0:02:39
-Average order parameter: 0.903
-Total time taken: 159.6129183769226 seconds
+100% (100 of 100) |###############################################| Elapsed Time: 0:00:18 Time:  0:00:18
+Average order parameter: 0.855
+Total time taken: 19.351770401000977 seconds
 
 
 
 $ python3 StochasticHopfieldNetwork.py 45
 
-100% (100 of 100) |###############################################| Elapsed Time: 0:02:37 Time:  0:02:37
-Average order parameter: 0.130
-Total time taken: 157.32430338859558 seconds
+100% (100 of 100) |###############################################| Elapsed Time: 0:00:19 Time:  0:00:19
+Average order parameter: 0.156
+Total time taken: 19.952781200408936 seconds

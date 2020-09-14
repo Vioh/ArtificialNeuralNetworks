@@ -2,6 +2,7 @@ import time
 import random
 import argparse
 import numpy as np
+import multiprocessing as mp
 from progressbar import progressbar # pip install progressbar2
 
 
@@ -52,47 +53,65 @@ def compute_weight_matrix(stored_patterns, row=None, zerodiag=True):
     return W
 
 
-def compute_order_parameter(input_pattern, weight_matrix, T=int(2e5)):
+def run_experiment(p, T=int(2e5)):
     """
-    Run the stochastic Hopfield network to compute the order parameter.
+    Run one trial by creating a stochastic Hopfield network and compute its order parameter.
 
     Args:
-        input_pattern (ndarray): Tensor of shape `(N,)` representing the input pattern with N bits.
-
-        weight_matrix (ndarray): Tensor of shape `(N, N)` representing weight matrix of the network.
+        p (int): Number of random patterns to store in the network.
 
         T (int): Number of asynchronous updates used for computing the order parameter.
 
     Returns:
         A number representing the order parameter of the stochastic Hopfield network.
     """
-    order = 0
+    order_param = 0
+    random_patterns = generate_random_patterns(p)
+    W = compute_weight_matrix(random_patterns)
+
+    input_pattern = random_patterns[0]
     pattern = np.copy(input_pattern)
     N = len(pattern)
 
     for _ in range(T):
         random_neuron = random.randrange(N)
-        prob = noisy_sigmoid(np.dot(weight_matrix[random_neuron], pattern))
+        prob = noisy_sigmoid(np.dot(W[random_neuron], pattern))
         pattern[random_neuron] = 1 if random.random() <= prob else -1
-        order += np.dot(pattern, input_pattern) / N / T
+        order_param += np.dot(pattern, input_pattern) / N / T
 
-    return order
+    return order_param
 
 
-def run_experiments(p, n_trials=100):
+def worker_thread(tasks_queue, done_queue):
     """
-    Run all the experiments to compute the average order parameter.
+    Worker thread will take one task from the `tasks_queue`, run the experiment, and then put the
+    final result (order parameter) into the `done_queue`.
     """
-    orders = []
-    start_time = time.time()
+    while True:
+        p = tasks_queue.get(block=True)
+        order_parameter = run_experiment(p)
+        done_queue.put(order_parameter)
 
-    for _ in progressbar(range(n_trials)):
-        random_patterns = generate_random_patterns(p)
-        W = compute_weight_matrix(random_patterns)
-        orders.append(compute_order_parameter(random_patterns[0], W))
 
-    print("Average order parameter: {:.3f}".format(sum(orders) / len(orders)))
-    print("Total time taken: {} seconds".format(time.time() - start_time))
+def main_thread(args):
+    """
+    Main thread will initialize worker threads and compute the average order parameter of all runs.
+    """
+    order_params = []
+    tasks_queue = mp.Queue()
+    done_queue = mp.Queue()
+    workers = mp.Pool(args.n_workers, initializer=worker_thread, initargs=(tasks_queue, done_queue))
+
+    for _ in range(args.n_trials):
+        tasks_queue.put(args.p)
+
+    for _ in progressbar(range(args.n_trials)):
+        order_param = done_queue.get(block=True)
+        order_params.append(order_param)
+
+    workers.terminate()
+    workers.join()
+    print("Average order parameter: {:.3f}".format(sum(order_params) / len(order_params)))
 
 
 if __name__ == "__main__":
@@ -104,5 +123,20 @@ if __name__ == "__main__":
         type=int,
         help="Number of stored patterns"
     )
-    args = parser.parse_args()
-    run_experiments(args.p)
+    parser.add_argument(
+        "--n-workers",
+        "-w",
+        default=12,
+        type=int,
+        help="Number of parallel workers"
+    )
+    parser.add_argument(
+        "--n-trials",
+        "-t",
+        default=100,
+        type=int,
+        help="Number of trials to perform for computing the average order parameter"
+    )
+    start_time = time.time()
+    main_thread(parser.parse_args())
+    print("Total time taken: {} seconds".format(time.time() - start_time))
