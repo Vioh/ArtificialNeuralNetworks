@@ -62,8 +62,8 @@ def compute_one_step_error_probability(p, N=120, n_trials=int(1e5), zerodiag=Fal
 
         n_trials (int): Number of trials for computing the one-step error probability.
 
-        diagonal (float): Weight along the diagonal of the weight matrix. If not given, the diagonal
-            weights will be computed using the normal Hebb's rule.
+        zerodiag (bool): If true, the weights along the diagonal of the weight matrix will be zeroed
+            out. Otherwise, the diagonal weights will be computed using the normal Hebb's rule.
 
     Returns:
         A float representing the one-step error probability.
