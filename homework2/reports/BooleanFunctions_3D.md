@@ -21,8 +21,8 @@ In general, there are $2^{(2^n)}$ nth-dimensional Boolean functions.
 For each cube representing a 3D Boolean function, a white corner will represent target $t^{(\mu)}=0$
 and a black corner will represent target $t^{(\mu)}=1$.
 
-This means a 3D Boolean function that maps 2 of the 8 possible inputs patterns to 1 must have a cube
-where exactly 2 of corners are colored black.
+This means a 3D Boolean function that maps 2 of the 8 possible inputs patterns to output 1 must be
+represented by a cube where exactly 2 of corners are colored black.
 
 In this case, we will have 3 symmetries in total:
 
@@ -37,7 +37,7 @@ In this case, we will have 3 symmetries in total:
 Graphically speaking, a 3D Boolean function is linearly separable if it can be represented by a cube
 where it is possible for a 2D plane to separate all white corners from black corners. This can only
 be achieved if a black corner is connected to at least another black corner (in case there are 2 or
-more black corners in the cube). Si our strategy is to identify all symmetries that are linearly
+more black corners in the cube). So our strategy is to identify all symmetries that are linearly
 separable, and then count how many Boolean functions belong to each of the symmetries.
 
 Let $k$ be the number of black corners in the cube. For each $k\in\{1,\dots,8\}$, the idea now is to
@@ -66,7 +66,7 @@ such symmetry for $k\in\{0,1,2,3\}$, but there are 2 such symmetries for $k=4$.
 
 Note that we don't have to do the same analysis for $k\in\{5,6,7,8\}$, because having $k$ black
 corners is also the same as having $8-k$ white corners, which will give the same results as when
-$k\in\{0,1,2,3\}$. This also means we need to multiply the results by 2 for each v$k\in\{0,1,2,3\}$.
+$k\in\{0,1,2,3\}$. This also means we need to multiply the results by 2 for each $k\in\{0,1,2,3\}$.
 
 Therefore, the total number of 3D Boolean functions are that linearly separable is:
 $(1+8+12+24)\times 2 + 14 = 104$.
