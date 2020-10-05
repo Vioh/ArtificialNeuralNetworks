@@ -1,0 +1,27 @@
+$ python3 TwoLayerPerceptron.py -o outputs/
+
+[Epoch 1] Error rate: 0.1442
+[Epoch 2] Error rate: 0.1364
+[Epoch 3] Error rate: 0.1378
+[Epoch 4] Error rate: 0.135
+[Epoch 5] Error rate: 0.1338
+[Epoch 6] Error rate: 0.1294
+[Epoch 7] Error rate: 0.1302
+[Epoch 8] Error rate: 0.129
+[Epoch 9] Error rate: 0.1292
+[Epoch 10] Error rate: 0.1398
+[Epoch 11] Error rate: 0.1262
+[Epoch 12] Error rate: 0.1284
+[Epoch 13] Error rate: 0.1322
+[Epoch 14] Error rate: 0.1338
+[Epoch 15] Error rate: 0.1264
+[Epoch 16] Error rate: 0.1326
+[Epoch 17] Error rate: 0.1296
+[Epoch 18] Error rate: 0.1288
+[Epoch 19] Error rate: 0.128
+[Epoch 20] Error rate: 0.1258
+[Epoch 21] Error rate: 0.1318
+[Epoch 22] Error rate: 0.1222
+[Epoch 23] Error rate: 0.1222
+[Epoch 24] Error rate: 0.1206
+[Epoch 25] Error rate: 0.1188
