@@ -42,6 +42,10 @@ def load_mnist(val_seed=None):
     return (x_train, y_train), (x_val, y_val), (x_test, y_test)
 
 
+def predict(model, inputs):
+    return tf.argmax(tf.nn.softmax(model(inputs)), axis=-1)
+
+
 def construct_network1():
     model = tf.keras.models.Sequential([
         InputLayer(input_shape=(28, 28, 1)),
@@ -129,6 +133,9 @@ def main(args):
 
     print("\n[INFO] Evaluating the model on the test set")
     test_loss, test_accuracy = model.evaluate(x_test, y_test)
+
+    print("\n[INFO] Runing predictions on the first 5 samples of the test set:")
+    print("[INFO] Expected: [7 2 1 0 4], Actual: {}".format(predict(model, x_test[0:5])))
 
     print("\n[INFO] Test accuracy:", test_accuracy)
     if training_performance is not None:

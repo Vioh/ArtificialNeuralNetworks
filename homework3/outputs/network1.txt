@@ -230,6 +230,9 @@ Epoch 100/100
 [INFO] Evaluating the model on the test set
 313/313 [==============================] - 0s 1ms/step - loss: 0.1824 - accuracy: 0.9463
 
+[INFO] Runing predictions on the first 5 samples of the test set:
+[INFO] Expected: [7 2 1 0 4], Actual: [7 2 1 0 4]
+
 [INFO] Test accuracy: 0.9463000297546387
 [INFO] Training accuracy: 0.9444599747657776
 [INFO] Validation accuracy: 0.9409000277519226
