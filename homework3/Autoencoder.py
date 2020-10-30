@@ -245,7 +245,24 @@ def do_experiment_on_model2_rules(mnist, encoder, decoder, outdir):
     plt.title("Model2: Plot of decoder outputs for mean bottleneck vectors for each digit")
     plt.imshow(decoder_outputs, cmap="gray_r")
     plt.axis("off")
-    plt.savefig("{}/rules_model2.png".format(outdir))
+    plt.savefig("{}/mean_vector_outputs.png".format(outdir))
+
+    fig = plt.figure(figsize=(6,3))
+    plt.title("Rules for autoencoder 2")
+    plt.axis("off")
+
+    def generate(counter, digit, bottleneck_point):
+        fig.add_subplot(1, 3, counter)
+        plt.axis("off")
+        plt.title("Expected digit: " + str(digit))
+        output = decoder.predict(bottleneck_point).reshape(28,28)
+        plt.tight_layout(pad=0)
+        plt.imshow(output, cmap="gray_r")
+
+    generate(1, digit=0, bottleneck_point=np.array([[50, 60, 30, 40]]))
+    generate(2, digit=1, bottleneck_point=np.array([[50, 10, 90, 10]]))
+    generate(3, digit=9, bottleneck_point=np.array([[50, 50, 90, 90]]))
+    plt.savefig(outdir + "/rules_model2.png")
 
 
 def main(args):
