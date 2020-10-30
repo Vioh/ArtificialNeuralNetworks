@@ -62,6 +62,32 @@ def construct_network(bottleneck_size):
     return model
 
 
+def split_network(model):
+    """
+    Split the network into 2 parts (encoder and decoder)
+
+    Arguments:
+        model (Sequential): The sequential model to be split.
+
+    Returns:
+        The encoder and decoder as 2 separate networks.
+    """
+    first_layer = model.get_layer(index=0)
+    bottleneck_layer = model.get_layer(index=1)
+    last_layer = model.get_layer(index=2)
+
+    encoder = tf.keras.models.Sequential([
+        InputLayer(input_shape=(784)),
+        first_layer,
+        bottleneck_layer,
+    ])
+    decoder = tf.keras.models.Sequential([
+        InputLayer(input_shape=(bottleneck_layer.units)),
+        last_layer,
+    ])
+    return encoder, decoder
+
+
 def train_network(mnist, network, outdir):
     """
     Train the autoencoder network.
@@ -115,10 +141,11 @@ def create_montage(mnist, model1, model2, outdir, test_seed=None):
     Create montage to compare results between model1 and model2 on random samples from the test set.
 
     Args:
-        model1 (Sequential): The loaded model for autoencoder 1.
-        model2 (Sequential): The loaded model for autoencoder 2.
-        outdir (str):        Directory to save the montage to.
-        test_seed (number):  Seed to randomly sample 10 digits from the test set.
+        mnist:     The MNIST dataset as loaded from load_mnist().
+        model1:    The loaded model for autoencoder 1.
+        model2:    The loaded model for autoencoder 2.
+        outdir:    Directory to save the montage to.
+        test_seed: Seed to randomly sample 10 digits from the test set.
     """
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = mnist
     saved_random_generator_state = np.random.get_state()
@@ -138,6 +165,39 @@ def create_montage(mnist, model1, model2, outdir, test_seed=None):
     plt.savefig("{}/montage.png".format(outdir))
 
 
+def create_scatter(mnist, model, outdir):
+    """
+    Create scatter plot for outputs of the bottleneck layer of the first autoencoder.
+
+    Arguments:
+        mnist:  The MNIST dataset as loaded from load_mnist().
+        model:  The trained model of the first autoencoder.
+        outdir: Directory to save the scatter plot to.
+    """
+    (x_train, y_train), (x_val, y_val), (x_test, y_test) = mnist
+    encoder, decoder = split_network(model)
+
+    def scatter(digit, color, n, well_recognized):
+        indices = np.where(y_test == digit)[0][:250]
+        outputs = encoder.predict(x_test[indices])
+        marker = "x" if well_recognized else "."
+        label = "Digit " + str(digit)
+        plt.scatter(outputs[:,0], outputs[:,1], c=color, marker=marker, s=40, label=label)
+
+    good_digits = [1]
+    good_colors = ["r"]
+    bad_digits  = [0, 2, 3, 4, 5, 6, 7, 8, 9]
+    bad_colors  = ["b", "g", "k", "c", "m", "y", [(.5, .5, .5)], [(.9, .6, .3)], [(.5, .3, .8)]]
+
+    plt.figure(figsize=(12,8))
+    [scatter(d, c, 100, well_recognized=True) for d, c in zip(good_digits, good_colors)]
+    [scatter(d, c, 100, well_recognized=False) for d, c in zip(bad_digits, bad_colors)]
+    plt.legend()
+    plt.tight_layout(pad=2)
+    plt.title("Scatter plot for bottleneck outputs of network 1")
+    plt.savefig("{}/scatter.png".format(outdir))
+
+
 def main(args):
     """
     Main program to train and evaluate autoencoders.
@@ -151,6 +211,7 @@ def main(args):
     model1 = load_network(1, args.outdir)
     model2 = load_network(2, args.outdir)
     create_montage(mnist, model1, model2, args.outdir)
+    create_scatter(mnist, model1, args.outdir)
 
 
 if __name__ == "__main__":
