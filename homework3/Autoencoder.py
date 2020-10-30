@@ -165,17 +165,17 @@ def create_montage(mnist, model1, model2, outdir, test_seed=None):
     plt.savefig("{}/montage.png".format(outdir))
 
 
-def create_scatter(mnist, model, outdir):
+def create_scatter(mnist, encoder, decoder, outdir):
     """
     Create scatter plot for outputs of the bottleneck layer of the first autoencoder.
 
     Arguments:
-        mnist:  The MNIST dataset as loaded from load_mnist().
-        model:  The trained model of the first autoencoder.
-        outdir: Directory to save the scatter plot to.
+        mnist:   The MNIST dataset as loaded from load_mnist().
+        encoder: Encoder of the first autoencoder.
+        decoder: Decoder of the first autoencoder.
+        outdir:  Directory to save the scatter plot to.
     """
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = mnist
-    encoder, decoder = split_network(model)
 
     def scatter(digit, color, n, well_recognized):
         indices = np.where(y_test == digit)[0][:250]
@@ -198,6 +198,31 @@ def create_scatter(mnist, model, outdir):
     plt.savefig("{}/scatter.png".format(outdir))
 
 
+def do_experiment_on_model1_rules(decoder, outdir):
+    """
+    Find the rules for the first autoencoder. Here we are gonna try to create the digit 1 (which is
+    well-recognized), and digits 0/9 (which are somewhat well-recognized), by only using the decoder
+    of the first autoencoder. The idea is to use the coordinates that are "well-separated" from the
+    scatter plots, and see if the decoder will give the expected digits or not.
+    """
+    fig = plt.figure(figsize=(6,3))
+    plt.title("Rules for autoencoder 1")
+    plt.axis("off")
+
+    def generate(counter, digit, bottleneck_point):
+        fig.add_subplot(1, 3, counter)
+        plt.axis("off")
+        plt.title("Expected digit: " + str(digit))
+        output = decoder.predict(bottleneck_point).reshape(28,28)
+        plt.tight_layout(pad=0)
+        plt.imshow(output, cmap="gray_r")
+
+    generate(1, digit=0, bottleneck_point=np.array([[12, 4]]))
+    generate(2, digit=1, bottleneck_point=np.array([[2, 40]]))
+    generate(3, digit=9, bottleneck_point=np.array([[1.5, 0]]))
+    plt.savefig(outdir + "/rules_model1.png")
+
+
 def main(args):
     """
     Main program to train and evaluate autoencoders.
@@ -210,8 +235,11 @@ def main(args):
 
     model1 = load_network(1, args.outdir)
     model2 = load_network(2, args.outdir)
+    encoder1, decoder1 = split_network(model1)
+
     create_montage(mnist, model1, model2, args.outdir)
-    create_scatter(mnist, model1, args.outdir)
+    create_scatter(mnist, encoder1, decoder1, args.outdir)
+    do_experiment_on_model1_rules(decoder1, args.outdir)
 
 
 if __name__ == "__main__":
