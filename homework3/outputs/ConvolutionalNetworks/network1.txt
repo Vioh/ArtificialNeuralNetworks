@@ -1,6 +1,5 @@
 $ python3 ConvolutionalNetworks.py 1
 
-(dml) vioh@pc:~/share/repo/ArtificalNeuralNetworks/homework3$ python3 ConvolutionalNetworks.py 1 -o outputs/
 [INFO] Using Tensorflow version: 2.2.0
 [INFO] Number of GPUs available: 1
 [INFO] Train set shapes: (50000, 28, 28, 1) (50000,)
