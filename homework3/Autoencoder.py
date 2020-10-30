@@ -223,6 +223,31 @@ def do_experiment_on_model1_rules(decoder, outdir):
     plt.savefig(outdir + "/rules_model1.png")
 
 
+def do_experiment_on_model2_rules(mnist, encoder, decoder, outdir):
+    """
+    Find the rules for the second autoencoder. Here we are gonna try to find the mean bottleneck
+    output vectors for each digit, and then feed those mean vectors to the decoder to see if we get
+    the expected digits or not.
+    """
+    (x_test, y_test), (x_val, y_val), (x_test1, y_test1) = mnist
+    bottleneck_vectors = encoder.predict(x_test)
+    mean_vectors = [np.mean(bottleneck_vectors[y_test == digit], axis=0) for digit in range(10)]
+
+    print("\n[INFO] Mean bottleneck vectors for each digit:")
+    for digit, mean in enumerate(mean_vectors):
+        print("Digit {} ==> {}".format(digit, mean))
+
+    decoder_inputs = np.array(mean_vectors)
+    decoder_outputs = decoder.predict(decoder_inputs)
+    decoder_outputs = np.concatenate(decoder_outputs.reshape(10,28,28), axis=1)
+
+    plt.figure(figsize=(8, 1.5))
+    plt.title("Model2: Plot of decoder outputs for mean bottleneck vectors for each digit")
+    plt.imshow(decoder_outputs, cmap="gray_r")
+    plt.axis("off")
+    plt.savefig("{}/rules_model2.png".format(outdir))
+
+
 def main(args):
     """
     Main program to train and evaluate autoencoders.
@@ -236,10 +261,12 @@ def main(args):
     model1 = load_network(1, args.outdir)
     model2 = load_network(2, args.outdir)
     encoder1, decoder1 = split_network(model1)
+    encoder2, decoder2 = split_network(model2)
 
     create_montage(mnist, model1, model2, args.outdir)
     create_scatter(mnist, encoder1, decoder1, args.outdir)
     do_experiment_on_model1_rules(decoder1, args.outdir)
+    do_experiment_on_model2_rules(mnist, encoder2, decoder2, args.outdir)
 
 
 if __name__ == "__main__":
