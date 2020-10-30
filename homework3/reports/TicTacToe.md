@@ -10,8 +10,8 @@ output: pdf_document
 
 ![learning_curve.png](../outputs/TicTacToe/learning_curve.png)
 *Figure 1: Learning curves smoothed over a window of 30. The training used $\alpha=0.1$, $\gamma=1$*,
-$\varepsilon=0.3$ (which is kept the same for the first $10^3$ episodes, and then is decreased by a
-factor $0.9$ after every $100$th episode). The train runs for $10^5$ episodes.
+$\varepsilon=0.5$ (which is kept the same for the first $10^3$ episodes, and then is decreased by a
+factor $0.9$ after every $100$th episode). The train runs for $10^6$ episodes.
 
 Implementation:
 
@@ -55,7 +55,7 @@ eps_initial = 0.5
 eps_decay = 0.9
 eps_decay_freq = 100
 eps_decay_start = int(1e3)
-n_games = int(1e5)
+n_games = int(1e6)
 window_size = 30
 
 

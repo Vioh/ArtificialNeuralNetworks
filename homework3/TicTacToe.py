@@ -10,7 +10,7 @@ eps_initial = 0.3
 eps_decay = 0.9
 eps_decay_freq = 100
 eps_decay_start = int(1e3)
-n_games = int(1e5)
+n_games = int(1e6)
 window_size = 30
 
 
