@@ -150,7 +150,7 @@ def main(args):
 
     model1 = load_network(1, args.outdir)
     model2 = load_network(2, args.outdir)
-    create_montage(mnist, model1, model2, args.outdir, test_seed=111)
+    create_montage(mnist, model1, model2, args.outdir)
 
 
 if __name__ == "__main__":
